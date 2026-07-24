@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GRACE–PCR-GLOBWB Static TWS DSS</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="data/metadata.js"></script>
+  <script src="data/boundaries.js"></script>
+  <script src="data/series.js"></script>
+</head>
+
+<body>
+<header class="topbar">
+  <div>
+    <h1>GRACE/GRACE-FO and PCR-GLOBWB Terrestrial Water Storage DSS</h1>
+    <p>Shapefile-average and selected-GRACE-grid TWS anomaly analysis</p>
+  </div>
+</header>
+
+<main class="page">
+  <section class="panel controls">
+    <label>
+      Analysis Mode
+      <select id="analysisModeSelect">
+        <option value="shapefile">Shapefile / Country Average</option>
+        <option value="point">Point Selection from Map</option>
+      </select>
+    </label>
+
+    <label>
+      Study Region / Shapefile
+      <select id="regionSelect"></select>
+    </label>
+
+    <label>
+      GRACE Product
+      <select id="graceSelect"></select>
+    </label>
+
+    <label>
+      PCR Precipitation Product
+      <select id="productSelect"></select>
+    </label>
+
+    <label>
+      Best PCR Product
+      <select id="bestProductSelect">
+        <option value="">None — use selected precipitation product</option>
+      </select>
+    </label>
+
+    <label>
+      PCR-GLOBWB Dataset
+      <select id="modeSelect"></select>
+    </label>
+
+    <label>
+      Spatial Map Layer
+      <select id="mapLayerSelect">
+        <option value="grace">GRACE TWSA</option>
+        <option value="model">PCR-GLOBWB TWSA</option>
+      </select>
+    </label>
+  </section>
+
+  <div id="graceOnlyNotice" class="notice" hidden>
+    Southeast Asia is displayed as GRACE-only. PCR-GLOBWB raw and resampled analyses are not included for this region.
+  </div>
+
+  <div id="pointModeNotice" class="notice point-notice" hidden>
+    Point mode is active. Select a blue GRACE grid centre on the map. The selected grid is highlighted in red.
+  </div>
+
+  <section id="summaryCards" class="summary-grid"></section>
+
+  <section class="dashboard-grid maps-row">
+    <article class="panel">
+      <div class="section-heading">
+        <div>
+          <h2>Interactive Map of GRACE Gridded Product</h2>
+          <p id="mapInstruction">OpenStreetMap background with selected shapefile boundary</p>
+        </div>
+      </div>
+      <div id="leafletMap"></div>
+      <div id="pointInfo" class="point-info"></div>
+    </article>
+
+    <article class="panel">
+      <div class="section-heading">
+        <div>
+          <h2>Monthly Spatial TWS Anomaly</h2>
+          <p id="spatialSubtitle"></p>
+        </div>
+        <span id="monthBadge" class="badge"></span>
+      </div>
+
+      <div class="date-selection-row">
+        <div class="slider-row">
+          <span id="firstMonthLabel"></span>
+          <input id="monthSlider" type="range" min="0" max="1" value="0" step="1">
+          <span id="lastMonthLabel"></span>
+        </div>
+
+        <div class="specific-date-controls">
+          <label>
+            Year
+            <select id="spatialYearSelect"></select>
+          </label>
+
+          <label>
+            Month
+            <select id="spatialMonthSelect">
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </label>
+
+          <button id="showSelectedMonthButton" type="button">
+            Show selected month
+          </button>
+        </div>
+      </div>
+
+      <div id="spatialPlot" class="plot spatial-plot"></div>
+    </article>
+  </section>
+
+  <section class="dashboard-grid time-row">
+    <article class="panel">
+      <h2 id="graceTitle">GRACE Regional TWSA Time Series</h2>
+      <div id="graceOnlyPlot" class="plot time-plot"></div>
+    </article>
+
+    <article id="comparisonPanel" class="panel">
+      <h2 id="comparisonTitle">GRACE versus PCR-GLOBWB TWSA</h2>
+      <div id="comparisonPlot" class="plot time-plot"></div>
+    </article>
+  </section>
+
+  <section id="performancePanel" class="dashboard-grid metrics-row">
+    <article class="panel">
+      <h2>Skill Metrics</h2>
+      <div id="skillMetricsPlot" class="plot metric-plot"></div>
+    </article>
+
+    <article class="panel">
+      <h2>Error Metrics</h2>
+      <div id="errorMetricPlot" class="plot metric-plot"></div>
+    </article>
+  </section>
+
+</main>
+
+<div id="loadingOverlay">Loading dashboard data…</div>
+<script src="app.js"></script>
+</body>
+</html>
